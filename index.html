@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vocabulary Cleaner with Copy and Reset</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      white-space: pre-wrap;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin: 10px 5px 10px 0;
+      padding: 6px 12px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>詞彙清單處理器（去除詞性標記）</h2>
+
+<textarea id="input">
+</textarea>
+
+<br>
+<button onclick="cleanWords()">清理並輸出</button>
+<button onclick="copyOutput()">📋 複製結果</button>
+<button onclick="resetFields()">🔄 重製</button>
+
+<h3>處理後結果：</h3>
+<pre id="output"></pre>
+
+<script>
+function cleanWords() {
+  const inputText = document.getElementById('input').value;
+  const lines = inputText.split(/\n/);
+
+  const cleaned = lines.map(line => {
+    const word = line.trim().split(" ")[0];
+    return word;
+  });
+
+  document.getElementById('output').textContent = cleaned.join('\n');
+}
+
+function copyOutput() {
+  const output = document.getElementById('output').textContent;
+  if (!output.trim()) {
+    alert("⚠️ 請先點『清理並輸出』再複製！");
+    return;
+  }
+
+  navigator.clipboard.writeText(output).then(() => {
+    alert("✅ 已成功複製到剪貼簿！");
+  }).catch(err => {
+    alert("❌ 複製失敗：" + err);
+  });
+}
+
+function resetFields() {
+  document.getElementById('input').value = '';
+  document.getElementById('output').textContent = '';
+}
+</script>
+
+</body>
+</html>
+
+
