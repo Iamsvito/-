@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Vocabulary Cleaner with Copy and Reset</title>
+  <title>Vocabulary Cleaner</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -26,7 +26,7 @@
 </head>
 <body>
 
-<h2>詞彙清單處理器（去除詞性標記）</h2>
+<h2>詞彙清單處理器（自動分詞 + 去除詞性）</h2>
 
 <textarea id="input">
 </textarea>
@@ -42,15 +42,23 @@
 <script>
 function cleanWords() {
   const inputText = document.getElementById('input').value;
-  const lines = inputText.split(/\n/);
 
-  const cleaned = lines.map(line => {
-    const word = line.trim().split(" ")[0];
-    return word;
-  });
+  // 使用正則找出所有英文單字（忽略詞性像 v.、n.、adj. 等）
+  const tokens = inputText.match(/\b[a-zA-Z\-']+\b/g) || [];
 
-  document.getElementById('output').textContent = cleaned.join('\n');
+  // 定義詞性集合，用於過濾
+  const partsOfSpeech = new Set(['n', 'v', 'adj', 'adv', 'prep', 'conj', 'pron', 'int', 'aux', 'det', 'num', 'art', 'modal', 'ment']);
+
+  // 過濾掉詞性詞
+  const wordsOnly = tokens.filter(token => !partsOfSpeech.has(token.toLowerCase()));
+
+  // 去除重複
+  const uniqueWords = [...new Set(wordsOnly)];
+
+  // 顯示結果
+  document.getElementById('output').textContent = uniqueWords.join('\n');
 }
+
 
 function copyOutput() {
   const output = document.getElementById('output').textContent;
